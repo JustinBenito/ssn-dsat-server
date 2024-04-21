@@ -12,13 +12,9 @@ scikit_learn
 numba
 fastapi
 disvoice
-fleep
-shutil
-moviepy
-flask
-werkzeug
-fileinput
+
+
 opensmile
-crepe
+
 torchvision
-seaborn
+
