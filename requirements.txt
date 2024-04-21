@@ -12,7 +12,7 @@ scikit_learn
 numba
 fastapi
 disvoice
-
+uvicorn
 
 opensmile
 
