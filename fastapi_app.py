@@ -2,33 +2,31 @@
 from fastapi import FastAPI
 from fastapi import FastAPI, File, UploadFile
 from disvoice.phonation import Phonation
-from disvoice.articulation import Articulation
-import fleep
-import shutil
-import moviepy.editor as moviepy
+# from disvoice.articulation import Articulation
+
 
 app = FastAPI()
 import os
-from flask import Flask, abort,flash, render_template, request, send_from_directory
-from fileinput import filename
+
+
 import os
-from werkzeug.wsgi import FileWrapper
+
 
 from disvoice.phonation import Phonation
-from werkzeug.utils import secure_filename
-import glob
+# from werkzeug.utils import secure_filename
+
 import pandas as pd
 import numpy as np
 import librosa
 import librosa.display
 import opensmile
 from Signal_Analysis.features.signal import *
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import MinMaxScaler
+# from sklearn.preprocessing import StandardScaler
+# from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
-import pickle
+
 import matplotlib
-import crepe
+
 from sklearn.preprocessing import LabelEncoder
 
 import torch
@@ -37,10 +35,8 @@ import os
 from torchvision import transforms, models, datasets
 from torch.utils.data import DataLoader
 from PIL import Image
-import webbrowser
-import parselmouth
-import seaborn as sns
-import tempfile
+
+
 from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
