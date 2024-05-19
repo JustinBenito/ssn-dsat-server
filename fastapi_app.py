@@ -1,0 +1,192 @@
+
+from fastapi import FastAPI
+from mangum import Mangum
+from fastapi import FastAPI, File, UploadFile
+from disvoice.phonation import Phonation
+
+app = FastAPI()
+handler=Mangum(app)
+import os
+
+import parselmouth
+import os
+
+
+from disvoice.phonation import Phonation
+
+import pandas as pd
+import numpy as np
+import librosa
+import librosa.display
+import opensmile
+from Signal_Analysis.features.signal import *
+# from sklearn.preprocessing import StandardScaler
+# from sklearn.preprocessing import MinMaxScaler
+import matplotlib.pyplot as plt
+
+import matplotlib
+
+from sklearn.preprocessing import LabelEncoder
+
+import torch
+from torchvision import models
+import os
+from torchvision import transforms, models, datasets
+from torch.utils.data import DataLoader
+from PIL import Image
+
+
+from fastapi.middleware.cors import CORSMiddleware
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:5173",
+    
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+
+@app.post("/extract")
+async def extract_file(file: UploadFile):
+    file_name = os.getcwd()+"/audios/"+file.filename.replace(" ", "-")
+    try:
+        os.mkdir("audios")
+        print(os.getcwd())
+
+    except Exception as e:
+        print(e) 
+        print("Error",file_name)
+
+    with open(file_name,'wb+') as f:
+        f.write(file.file.read())
+        f.close()
+        d = []
+        phonation = Phonation()
+        ph=phonation.extract_features_file(file_name, static=True, plots=False, fmt="dataframe")
+        matplotlib.pyplot.savefig(os.path.join(basedir, 'app/static/images', 'plot.jpg')) 
+        dt = ph.to_dict('records')
+        p=dt[0]
+        
+        avg_df0 = p['avg DF0']
+        avg_ddf0 = p['avg DDF0']
+        avg_jitter = p['avg Jitter']
+        avg_shimmer = p['avg Shimmer']
+        avg_apq = p['avg apq']
+        avg_ppq = p['avg ppq']
+        avg_logE = p['avg logE']
+        phon = pd.DataFrame.from_dict(d, "columns")
+        y, sr = librosa.load(file_name)
+        mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=40)
+        S = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=40)
+        librosa.display.specshow(librosa.power_to_db(S, ref=np.max),x_axis='time',y_axis='mel',fmax=8000)
+        plt.savefig(os.path.join(basedir, 'app/static/images', 'mel_testanalyse.jpg'))
+
+        smile = opensmile.Smile(
+            feature_set=opensmile.FeatureSet.ComParE_2016,
+            feature_level=opensmile.FeatureLevel.LowLevelDescriptors,
+        )
+        op = smile.process_file(file_name)
+        sound = parselmouth.Sound(file_name)
+
+        energy = sound.to_intensity()
+        matplotlib.pyplot.imsave(os.path.join(basedir, 'app/static/images', 'energy.jpg'), energy) 
+
+        sound_vals=list(np.array(sound.values)[0])
+
+        energy_plot=list(np.array(energy.values)[0])
+        s = op.to_dict('records')
+        opsmile = s[0]
+
+        hnr = get_HNR( y, sr )
+        f0 =  get_F_0( y, sr )
+        pitch = sound.to_pitch()
+        f0 = f0[0]    
+        feat={
+                'avg_DF0' : p['avg DF0'],
+                'avg_DDF0' :p['avg DDF0'],
+                'avg_Jitter' : p['avg Jitter'],
+                'avg_Shimmer' : p['avg Shimmer'],
+                'avg_apq' :p['avg apq'],
+                'avg_ppq' : p['avg ppq'],
+                'avg_logE' :  p['avg logE'],
+
+                'pcm_fftMag_spectralHarmonicity_sma' :[opsmile['pcm_fftMag_spectralHarmonicity_sma']],
+                'pcm_fftMag_spectralVariance_sma' : [opsmile['pcm_fftMag_spectralVariance_sma']],
+                'pcm_fftMag_spectralCentroid_sma' : [opsmile['pcm_fftMag_spectralCentroid_sma']],
+                
+                'energy_plot': energy_plot,
+                'sound_plot': sound_vals,
+
+                'pitch_plot': list(np.array(pitch.selected_array['frequency'])),
+                
+                'filename': file_name
+        } 
+    return {"features":feat}
+    
+
+@app.post("/analyse")
+async def create_upload_file(file: UploadFile):
+    try:
+        os.mkdir("audios")
+        print(os.getcwd())
+    except Exception as e:
+        print(e) 
+    file_name = os.getcwd()+"/audios/"+file.filename.replace(" ", "-")
+    with open(file_name,'wb+') as f:
+        f.write(file.file.read())
+        f.close()
+        resnet_model = models.resnet50() 
+        model_path = os.path.join(basedir, 'app/static/model', 'resnet_model.pth')
+        model_state_dict = torch.load(model_path, map_location=torch.device('cpu'))
+
+
+        model = models.resnet50(pretrained=True)  
+        model.fc = torch.nn.Linear(in_features=2048, out_features=4)  
+        model.load_state_dict(model_state_dict)
+        model.eval()
+
+        y, sr = librosa.load(file_name)
+        mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=40)
+        S = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=40)
+        img = librosa.display.specshow(librosa.power_to_db(S, ref=np.max),x_axis='time',y_axis='mel',fmax=8000)
+        plt.savefig(os.path.join(basedir, 'app/static/images', 'mel1.jpg'))
+
+        def preprocess_image(image_path):
+            transform = transforms.Compose([
+                transforms.Resize((224, 224)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+            image = Image.open(image_path)
+            input_tensor = transform(image)
+            input_batch = input_tensor.unsqueeze(0)  # Add a batch dimension
+            return input_batch
+        # Mapping between class indices and labels (replace this with your actual mapping)
+        class_mapping = {0: 'Mild', 1: 'Moderate', 2: 'Normal', 3: 'Severe'}
+
+        # Example of making predictions
+        image_path = os.path.join(basedir, 'app/static/images', 'mel1.jpg')
+        input_data = preprocess_image(image_path)
+        with torch.no_grad():
+            output = model(input_data)
+
+        
+        probabilities = torch.nn.functional.softmax(output[0], dim=0)
+
+        predicted_class = torch.argmax(probabilities).item()
+  
+    return {"message":f"{predicted_class}"}
+  

@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>speechlab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans&display=swap" rel="stylesheet"> <!-- https://fonts.google.com/specimen/Kumbh+Sans -->
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'fontawesome/css/all.min.css') }}">  <!-- https://fontawesome.com/-->  
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/magnific-popup.css') }}">       <!-- https://dimsemenov.com/plugins/magnific-popup/ -->
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/bootstrap.min.css') }}">        <!-- https://getbootstrap.com/ -->
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'slick/slick.min.css') }}">          <!-- https://kenwheeler.github.io/slick/ -->
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'slick/slick-theme.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/templatemo-upright.css') }}">
+
+</head>
+<body>    
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Leftside bar -->
+            <div id="tm-sidebar" class="tm-sidebar"> 
+                <nav class="tm-nav">
+                    <button class="navbar-toggler" type="button" aria-label="Toggle navigation">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div>
+                        <div class="tm-brand-box">
+                            <h2 class="tm-brand" style="margin-left: 30px;">Dysarthric Severity Assesment Tool</h2>
+                        </div>                
+                        <ul id="tm-main-nav">
+                            <li class="nav-item">                                
+                                <a href="#home" class="nav-link current">
+                                    <div class="triangle-right"></div>
+                                    <i class="fas fa-home nav-icon"></i>
+                                    About Dysarthric severity Assesment Tool 
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#file-upload" class="nav-link">
+                                    <div class="triangle-right"></div>
+                                    <i class="fas fa-file-audio nav-icon"></i>
+                                    Try with a Dysarthric wav file 
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#output" class="nav-link">
+                                    <div class="triangle-right"></div>
+                                    <i class="fas fas fa-chart-line nav-icon"></i>
+                                    Output Summary
+                                </a>
+                            </li>
+                          
+                        </ul>
+                        
+                    </div>
+                    <footer class="mb-3 tm-mt-100">
+                        Design: Keerthi
+                    </footer>
+                </nav>
+            </div>
+            
+            <div class="tm-main">
+                <!-- Home section -->
+                <div class="tm-section-wrap">
+                    <!--<div class="tm-parallax" data-parallax="fixed" data-image-src="img/speech-therapy.jpg"  style="position: absolute; bottom: 0; left: -1;"> </div>         -->          
+                    <section id="home" class="tm-section">
+                        <h2 class="tm-text-primary">Welcome to DSAT</h2>
+                        <hr class="mb-5">
+                        <div class="row">
+                            <div class="col-lg-6 tm-col-home mb-4">
+                                <div class="tm-text-container">
+                                    <div class="tm-icon-container mb-5 mr-0 mr-auto">
+                                       <p> <i class="fas fa-microphone-alt fa-4x tm-pre-icon tm-text-primary"></i></p>
+                                    </div>                                
+                                    <p class="justified-text">
+                                        Dysarthria is a motor speech disorder that affects the muscles involved in speech production. It is characterized by weak, slow, or uncoordinated movements of the muscles responsible for speech, which can result in difficulties with articulation, resonance, and overall speech intelligibility. The disorder can range from mild to severe and may affect different aspects of speech depending on the underlying cause and specific muscles involved.
+
+
+                                    </p>
+                                    <p class="justified-text">
+                                        Symptoms of dysarthria can vary widely and may include slurred speech, imprecise articulation, a slow rate of speech, difficulty controlling pitch and loudness, and changes in the quality of the voice. 
+                                    </p>
+                                </div>                                
+                            </div>
+                            <div class="col-lg-6 tm-col-home mb-4">
+                                <div class="tm-text-container">
+                                    <div class="tm-icon-container mb-5 mr-0 mr-auto">
+                                        <i class="fas fa-assistive-listening-systems fa-4x tm-pre-icon  tm-text-primary"></i>
+                                    </div>                                 
+                                    <p class="justified-text">
+                                        Dysarthric severity assessment tools play a pivotal role in the clinical management and rehabilitation of individuals with dysarthria.
+
+                                    </p>
+                                    <p class="justified-text">The Dysarthric Severity Assessment Tool developed by our team will provide a concise summary of dysarthric severity of speech by evaluating different aspects of speech, including:
+                                        <ul> 
+                                            <li>Phonation: Assessing the quality of vocal tone and any abnormalities in pitch or loudness.</li>
+                                            <li>Articulation: Examining the precision and coordination of movements in the lips, tongue, and jaw.</li>
+                                            <li>Glottal:  Characteristics and functions associated with the glottis. </li>
+                                        </ul></p>
+                                    <div class="text-right">
+                                        <a href="#file-upload" class="btn btn-primary tm-btn-next">Next Page</a>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="tm-hr-short mb-5">
+                       
+                    </section>
+                </div>
+                <!-- file upload-->
+                <div class="tm-section-wrap">
+                    <!--<div class="tm-parallax" data-parallax="fixed" data-image-src="img/speech-therapy.jpg"  style="position: absolute; bottom: 0; left: -1;"> </div>         -->          
+                    <section id="file-upload" class="tm-section">
+                        <hr class="mb-5">
+                        <div class="row">
+                            <div class="col-lg-6 tm-col-home mb-4">
+                                <div class="tm-text-container">
+                                    <h2 class="tm-text-primary">Input a Dysarthric wav file</h2>
+                                    <p class="justified-text">
+                                        
+                                        <form action="/output" method="post" enctype="multipart/form-data">
+                                            <label for="fileInput">Choose a file:</label>
+                                            <input type="file" id="fileInput" name="fileInput" accept=".wav">
+                                            <button type="submit" class="btn btn-primary tm-btn-next" >Submit</button>
+                                          </form>
+                                    </p>
+                                    <script>
+                                        function myFunction() {
+                                          alert("audio uploaded");
+                                        }
+                                        </script>
+                                    
+                                    <div class="text-right">
+                                        <a href="#output" class="btn btn-primary tm-btn-next">Next Page</a>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="tm-hr-short mb-5">
+                       
+                    </section>
+                </div>
+                <!-- output  -->
+                
+                <div class="tm-section-wrap">
+                    <!--<div class="tm-parallax" data-parallax="fixed" data-image-src="img/speech-therapy.jpg"  style="position: absolute; bottom: 0; left: -1;"> </div>         -->          
+                    <section id="file-upload" class="tm-section">
+                        <hr class="mb-5">
+                        <div class="row">
+                            <div class="col-lg-6 tm-col-home mb-4">
+                                <div class="tm-text-container">
+                                    <p class="justified-text">
+                                        
+                                    </p>
+                                    
+                                    File uploaded 
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="tm-hr-short mb-5">
+                       
+                    </section>
+                </div>            
+
+                <!-- Copyright -->                
+                <div class="tm-section-wrap tm-copyright row">
+                    <div class="col-12">
+                        <div class="text-right">
+                            Copyright 2023 Speechlab
+                        </div> 
+                    </div>
+                </div>                 
+            </div> <!-- .tm-main -->                      
+        </div> <!-- .row -->
+    </div> <!-- .container-fluid -->
+    <script src="{{url_for('static', filename='js/jquery-3.4.1.min.js')}}"></script>          <!-- https://jquery.com/ -->
+    <script src="{{url_for('static', filename='js/jquery.singlePageNav.min.js')}}"></script>  <!-- https://github.com/ChrisWojcik/single-page-nav -->
+    <script src="{{url_for('static', filename='js/parallax/parallax.min.js')}}"></script>     <!-- https://pixelcog.github.io/parallax.js/ -->
+    <script src="{{url_for('static', filename='js/imagesloaded.pkgd.min.js')}}"></script>     <!-- https://imagesloaded.desandro.com/ -->
+    <script src="{{url_for('static', filename='js/isotope.pkgd.min.js')}}"></script>          <!-- https://isotope.metafizzy.co/ -->
+    <script src="{{url_for('static', filename='js/jquery.magnific-popup.min.js')}}"></script> <!-- https://dimsemenov.com/plugins/magnific-popup/ -->
+    <script src="{{url_for('static', filename='slick/slick.min.js')}}"></script>              <!-- https://kenwheeler.github.io/slick/ -->
+    <script src="{{url_for('static', filename='js/templatemo-script.js')}}"></script>
+</body>
+</html> 

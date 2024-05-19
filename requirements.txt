@@ -1,0 +1,14 @@
+
+fastapi
+mangum
+disvoice
+parselmouth
+pandas
+numpy
+librosa
+opensmile
+matplotlib
+scikit-learn
+torch
+torchvision
+Pillow
