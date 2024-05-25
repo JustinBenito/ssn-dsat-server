@@ -1,8 +1,8 @@
-setuptools==57.5.0
+
 fastapi
 mangum
 disvoice
-parselmouth
+praat-parselmouth
 pandas
 numpy
 librosa
